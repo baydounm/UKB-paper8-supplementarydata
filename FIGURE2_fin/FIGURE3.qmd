@@ -1,0 +1,332 @@
+---
+title: "heat map"
+format: html
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+#| label: load-packages
+#| echo: false
+pacman::p_load(readxl, janitor, hablar, tictoc, fs, gt, DT, ComplexHeatmap, seriation, viridisLite, RColorBrewer, scales, circlize)
+pacman::p_load(tidyverse)
+```
+
+## Introduction
+
+Email from Baydoun, May Ahmad on May 12, 2023.
+
+::: {.callout-note collapse="true"}
+## Instructions in May's email
+
+I am almost done with the analysis for the new paper and I met with Osorio to finalize it. I am attaching the excel sheet for the heat map that I need from you.
+ 
+Basically, it has to be labelled with 22 different proteins (gdf15 etc…), the variables to be included are the Beta which should be labelled as :
+Tereri
+ereri_cde
+ereri_intref
+ereri_intmed
+ereri_pie
+pct_cde
+pct_intref
+pct_intmed
+pct_pie
+ 
+Finally, it would nice to have an asterisk for P<0.05 for:
+Tereri
+ereri_cde
+ereri_intref
+ereri_intmed
+ereri_pie
+ 
+ 
+Notice that pct variables are percentages, so they should add up to 100% per protein.
+ 
+Please let me know if you have any questions or issues.
+ 
+As I told Osorio, it would be great to have this done by June 20th.
+ 
+This is a hot topic and a lot of people will be diving into this data 😊. Thank you for all your hard work,
+ 
+Have a nice weekend,
+
+:::
+
+
+Further explanations from May on May 17, 2023.
+
+::: {.callout-note collapse="true"}
+## Further instructions in May's email
+
+Just as a clarification, the legend for pct should be from -10% to +10%, since most pcts are between 0 and 7% in either direction.
+ 
+The other one which includes the total effect (tereri), pure indirect effect (pie), controlled direct effect (cde) and the two other components (interaction referent and mediated interaction),
+should be from -2 to +2, since the total effect is about 1.2 to 1.5 and the others are simply components of that total effect.
+ 
+The cde and te are close enough to each other in color, but cde should be somehow lighter than te.
+ 
+For the stars (*), those are mainly for all the te, cde and most of the pie (with 5 exceptions, since 17 of the 22 have significant PIE).
+ 
+There are no significant mediated interactions or interaction referent at the type I error of 0.05.
+
+:::
+
+
+## Load data
+
+```{r}
+d <- read_excel("../File_from_May/TOP22_FOURWAYDECOMPOSITION_FINDINGS_FINAL.xlsx", sheet = "HEATMAP_DATA") |> 
+  clean_names()
+
+
+glimpse(d)
+```
+
+## data reorganizing
+
+### Convert to wide format
+
+beta value
+
+```{r}
+d_wide <-
+  d |> 
+  select(fourwaydecomp, beta, protein, p) |> 
+  pivot_wider(
+    id_cols = protein,
+    # id_cols = c(protein, p),
+    names_from = fourwaydecomp,
+    values_from = beta
+  )
+
+glimpse(d_wide)
+```
+
+p value
+
+```{r}
+d_wide_p <-
+  d |> 
+      mutate(
+      p_anno = case_when(
+         p <= 0.001 ~ "***",
+         p <= 0.01 ~ "**",
+         p <= 0.05 ~ "*",
+         .default = ""
+      )
+   ) |> 
+  select(fourwaydecomp, beta, protein, p_anno) |> 
+  pivot_wider(
+    id_cols = protein,
+    # id_cols = c(protein, p),
+    names_from = fourwaydecomp,
+    values_from = p_anno
+  )
+
+glimpse(d_wide_p)
+```
+
+
+### Convert to matrix
+
+beta
+
+```{r}
+# Convert to matrix
+mat <-
+  d_wide |> 
+  select(- contains("pct_")) |> 
+  column_to_rownames("protein") |> 
+  as.matrix()
+
+# Order the columns by their means
+mat <- mat[, order(colMeans(mat), decreasing = TRUE)]
+
+glimpse(mat)
+```
+
+p value
+
+```{r}
+# Convert to matrix
+mat_p <-
+  d_wide_p |> 
+  select(- contains("pct_")) |> 
+  column_to_rownames("protein") |> 
+  as.matrix()
+
+# Order the columns according to mat
+mat_p <- mat_p[, colnames(mat)]
+
+glimpse(mat_p)
+```
+
+
+## Heatmap
+
+<!-- ### Color function -->
+
+<!-- ```{r} -->
+
+<!-- # col_fun = colorRamp2(c(0, 0.2, 1.2), c("green", "white", "red")) -->
+<!-- col_fun = colorRamp2(c(0, 0.05, 1.3), brewer.pal(3, "Paired")) -->
+<!-- col_fun = colorRamp2(c(0, 0.05, 1.3), brewer.pal(3, "RdYlGn")) -->
+<!-- col_fun = colorRamp2(c(0, 0.1, 1.3), brewer.pal(3, "RdYlBu")) -->
+<!-- # col_fun = colorRamp2(c(0, 0.2, 1.2), viridis(n=3, option = "D")) -->
+<!-- ``` -->
+
+### Row ordering
+
+```{r}
+# o1 = seriate(dist(mat), method = "OLO")
+# o1 = seriate(dist(mat), method = "MDS")
+o1 = seriate(dist(mat), method = "MDS_angle")
+```
+
+### Use full names as matrix column names
+
+```{r}
+# abbr. name = full name
+ef_name <- c("tereri" = "total effect", 
+             "ereri_cde" = "controlled direct effect",
+             "ereri_pie" = "pure indirect effect",
+             "ereri_intmed" = "mediated interaction",
+             "ereri_intref" = "interaction reference")
+
+colnames(mat) <-  ef_name[colnames(mat)]
+
+```
+
+
+### Make heatmap
+
+- p value annotation. 
+  - p <= 0.05: *
+  - p <= 0.01: **
+  - p <= 0.001: ***
+
+#### Scheme I
+
+- Color: RColorBrewer,  RdYlBu
+- Range: -0.02, 1.3
+
+```{r}
+#| fig-height: 10
+#| fig-width: 10
+
+# col_fun = colorRamp2(c(-2, 0.1, 2), brewer.pal(3, "RdYlBu"))
+# brewer.pal(3, "RdYlBu") |> 
+#    scales::show_col()
+col_fun = colorRamp2(c(-0.02, 0.3, 1.3), brewer.pal(3, "RdYlBu"))
+
+mat |> 
+  Heatmap(
+   name = "Beta",
+   cluster_columns = FALSE,
+   cluster_rows = FALSE,
+   row_order = get_order(o1),
+   
+   # color function
+   col = col_fun,
+   
+   # Title
+   row_title = "Protein",
+   row_title_side = "left",
+   column_title = "Effect size (Regression coefficients)",
+   column_title_gp = gpar(fontsize = 20, fontface = "bold"),
+   
+   # Names
+   row_names_side = "left",
+   column_names_gp = gpar(fontsize = 12, fontface="bold"),
+   column_names_rot = 45,
+   
+   # Add "*" for significant p values
+   cell_fun = function(j, i, x, y, w, h, col) { # add text to each grid
+        grid.text(mat_p[i, j], x, y)
+    }
+  )
+```
+
+
+#### Scheme II
+
+- Color: RColorBrewer,  RdYlBu
+- Range: -2, 2
+
+```{r}
+#| fig-height: 10
+#| fig-width: 10
+
+col_fun = colorRamp2(c(-2, 0.1, 2), brewer.pal(3, "RdYlBu"))
+# col_fun = colorRamp2(c(-0.02, 0.3, 1.3), brewer.pal(3, "RdYlBu"))
+
+mat |> 
+  Heatmap(
+   name = "Beta",
+   cluster_columns = FALSE,
+   cluster_rows = FALSE,
+   row_order = get_order(o1),
+   
+   # color function
+   col = col_fun,
+   
+   # Title
+   row_title = "Protein",
+   row_title_side = "left",
+   column_title = "Effect size (Regression coefficients)",
+   column_title_gp = gpar(fontsize = 20, fontface = "bold"),
+   
+   # Names
+   row_names_side = "left",
+   column_names_gp = gpar(fontsize = 12, fontface="bold"),
+   column_names_rot = 45,
+   
+   # Add "*" for significant p values
+   cell_fun = function(j, i, x, y, w, h, col) { # add text to each grid
+        grid.text(mat_p[i, j], x, y)
+    }
+  )
+```
+
+
+#### Scheme III
+
+- Color: viridis 
+- Range: -0.02, 1.3
+
+```{r}
+#| fig-height: 10
+#| fig-width: 10
+
+col_fun = colorRamp2(c(-0.02, 0.3, 1.3), viridis(n=3, option = "D"))
+
+mat |> 
+  Heatmap(
+   name = "Beta",
+   cluster_columns = FALSE,
+   cluster_rows = FALSE,
+   row_order = get_order(o1),
+   
+   # color function
+   col = col_fun,
+   
+   # Title
+   row_title = "Protein",
+   row_title_side = "left",
+   column_title = "Effect size (Regression coefficients)",
+   column_title_gp = gpar(fontsize = 20, fontface = "bold"),
+   
+   # Names
+   row_names_side = "left",
+   column_names_gp = gpar(fontsize = 12, fontface="bold"),
+   column_names_rot = 45,
+   
+   # Add "*" for significant p values
+   cell_fun = function(j, i, x, y, w, h, col) { # add text to each grid
+        grid.text(mat_p[i, j], x, y)
+    }
+  )
+```
+
+
+
