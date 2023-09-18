@@ -3,7 +3,7 @@ Supplementary files and data for UKB paper 8, entitled:
 
 Mediating and moderating effects of plasma proteomic biomarkers on the association between hospital-treated prevalent infections and incident dementia: The UK Biobank study
 
-May A. Beydouna,*; Hind A. Beydouna, b; Nicole Noren Hootena; Osorio Meirellesa; Zhiguang Lia; Ziad W. El-Hajjc; Jordan Weissd; Christian A. Maino Vieytesa; Lenore J. Launera; Michele K. Evansa; Alan B. Zondermana
+May A. Beydouna; Hind A. Beydoun; Nicole Noren Hooten; Osorio Meirelles; Zhiguang Li; Ziad W. El-Hajj; Jordan Weiss; Christian A. Maino Vieytes; Lenore J. Launer; Michele K. Evans; Alan B. Zonderman
 
 
 This paper is accepted in iScience. 
