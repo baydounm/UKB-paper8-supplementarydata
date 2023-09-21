@@ -19,6 +19,8 @@ This repository contains the following folders:
 --FIGURES3
 --FIGURES4
 --SYNTAX
+--OUTPUT
+--OUTPUT2
 
 
 
