@@ -1,0 +1,655 @@
+{smcl}
+{com}{sf}{ul off}{txt}
+{com}. 
+. use "D:\16GBBACKUPUSB\BACKUP_USB_SEPTEMBER2014\May Baydoun_folder\UK_BIOBANK_PROJECT\UKB_PAPER8A_INFECTIONBURDEN_OLINK_DEM\DATA\finaldata_unimputedFINAL",clear
+{txt}
+{com}. 
+. capture mi stset, clear
+{txt}
+{com}. capture mi set, clear
+{txt}
+{com}. 
+. stset Age_dementia, failure(dem_diag==1) enter(baselineage) id(n_eid) scale(1)
+
+{txt}Survival-time data settings
+
+{col 12}ID variable: {res}n_eid
+{col 10}{txt}Failure event: {res}dem_diag==1
+{col 1}{txt}Observed time interval: {res}(Age_dementia[_n-1], Age_dementia]
+{col 6}{txt}Enter on or after: {res}time baselineage
+{col 6}{txt}Exit on or before: {res}failure
+
+{txt}{hline 74}
+{res}     37,269{txt}  total observations
+{res}          0{txt}  exclusions
+{hline 74}
+{res}     37,269{txt}  observations remaining, representing
+{res}     37,269{txt}  subjects
+{res}        988{txt}  failures in single-failure-per-subject data
+{res} 452,684.95{txt}  total analysis time at risk and under observation
+                                                At risk from t = {res}        0
+                                     {txt}Earliest observed entry t = {res} 50.00137
+                                          {txt}Last observed exit t = {res} 84.54757
+{txt}
+{com}. 
+. xtile AD_PGStert=AD_PGS if sample_final==1, nq(3)
+{err}variable {bf}AD_PGStert{sf} already defined
+{txt}{search r(110), local:r(110);}
+
+end of do-file
+
+{search r(110), local:r(110);}
+
+{com}. do "C:\Users\baydounm\AppData\Local\Temp\STDe40_000000.tmp"
+{txt}
+{com}. capture drop AD_PGStert
+{txt}
+{com}. xtile AD_PGStert=AD_PGS if sample_final==1, nq(3)
+{txt}
+{com}. 
+. save, replace
+{txt}{p 0 4 2}
+file {bf}
+D:\16GBBACKUPUSB\BACKUP_USB_SEPTEMBER2014\May Baydoun_folder\UK_BIOBANK_PROJECT\UKB_PAPER8A_INFECTIONBURDEN_OLINK_DEM\DATA\finaldata_unimputedFINAL.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. ***************************************************************OVERALL*******************
+. 
+. **Model 1**
+. 
+.  stcox infectionburdenhospbr AGE SEX NonWhite householdsize SES LE8_TOTALSCORE if sample_final==1
+
+{col 10}{txt}Failure {bf:_d}: {res}dem_diag==1
+{col 4}{txt}Analysis time {bf:_t}: {res}Age_dementia
+{col 3}{txt}Enter on or after: {res}time baselineage
+{col 9}{txt}ID variable: {res}n_eid
+
+{txt}Iteration 0:  Log likelihood = {res}-9274.3197
+{txt}Iteration 1:  Log likelihood = {res}-9185.6152
+{txt}Iteration 2:  Log likelihood = {res}-9177.3472
+{txt}Iteration 3:  Log likelihood = {res}-9177.3301
+{txt}Refining estimates:
+Iteration 0:  Log likelihood = {res}-9177.3301
+
+{txt}Cox regression with Breslow method for ties
+
+No. of subjects = {res}{ralign 10:37,269}{col 57}{txt}{lalign 13:Number of obs} = {res}{ralign 6:37,269}
+{txt}No. of failures = {res}{ralign 10:988}
+{txt}Time at risk    = {res}{ralign 10:452,684.95}
+{col 57}{txt}{lalign 13:LR chi2({res:7})} = {res}{ralign 6:193.98}
+{txt}Log likelihood = {res}-9177.3301{col 57}{txt}{lalign 13:Prob > chi2} = {res}{ralign 6:0.0000}
+
+{txt}{hline 22}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                   _t{col 23}{c |} Haz. ratio{col 35}   Std. err.{col 47}      z{col 55}   P>|z|{col 63}     [95% con{col 76}f. interval]
+{hline 22}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+infectionburdenhospbr {c |}{col 23}{res}{space 2} 2.235889{col 35}{space 2} .1584998{col 46}{space 1}   11.35{col 55}{space 3}0.000{col 63}{space 4}  1.94585{col 76}{space 3} 2.569159
+{txt}{space 18}AGE {c |}{col 23}{res}{space 2}   1.0339{col 35}{space 2} .0128976{col 46}{space 1}    2.67{col 55}{space 3}0.008{col 63}{space 4} 1.008928{col 76}{space 3} 1.059491
+{txt}{space 18}SEX {c |}{col 23}{res}{space 2} .7553636{col 35}{space 2} .0487052{col 46}{space 1}   -4.35{col 55}{space 3}0.000{col 63}{space 4} .6656888{col 76}{space 3} .8571185
+{txt}{space 13}NonWhite {c |}{col 23}{res}{space 2} 1.062106{col 35}{space 2} .1805522{col 46}{space 1}    0.35{col 55}{space 3}0.723{col 63}{space 4}  .761147{col 76}{space 3} 1.482066
+{txt}{space 8}householdsize {c |}{col 23}{res}{space 2} .9342091{col 35}{space 2} .0391675{col 46}{space 1}   -1.62{col 55}{space 3}0.105{col 63}{space 4} .8605116{col 76}{space 3} 1.014218
+{txt}{space 18}SES {c |}{col 23}{res}{space 2} .8226704{col 35}{space 2} .0402238{col 46}{space 1}   -3.99{col 55}{space 3}0.000{col 63}{space 4} .7474929{col 76}{space 3} .9054088
+{txt}{space 7}LE8_TOTALSCORE {c |}{col 23}{res}{space 2} .9990545{col 35}{space 2} .0003516{col 46}{space 1}   -2.69{col 55}{space 3}0.007{col 63}{space 4} .9983657{col 76}{space 3} .9997438
+{txt}{hline 22}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. 
+. **Model 2: Interaction with AD PGS tertile**
+.  stcox c.infectionburdenhospbr##c.AD_PGStert AGE SEX NonWhite householdsize SES LE8_TOTALSCORE if sample_final==1
+
+{col 10}{txt}Failure {bf:_d}: {res}dem_diag==1
+{col 4}{txt}Analysis time {bf:_t}: {res}Age_dementia
+{col 3}{txt}Enter on or after: {res}time baselineage
+{col 9}{txt}ID variable: {res}n_eid
+
+{txt}Iteration 0:  Log likelihood = {res}-9274.3197
+{txt}Iteration 1:  Log likelihood = {res}-9073.5053
+{txt}Iteration 2:  Log likelihood = {res}-9005.5276
+{txt}Iteration 3:  Log likelihood = {res}-9004.2452
+{txt}Iteration 4:  Log likelihood = {res}-9004.2439
+{txt}Refining estimates:
+Iteration 0:  Log likelihood = {res}-9004.2439
+
+{txt}Cox regression with Breslow method for ties
+
+No. of subjects = {res}{ralign 10:37,269}{col 57}{txt}{lalign 13:Number of obs} = {res}{ralign 6:37,269}
+{txt}No. of failures = {res}{ralign 10:988}
+{txt}Time at risk    = {res}{ralign 10:452,684.95}
+{col 57}{txt}{lalign 13:LR chi2({res:9})} = {res}{ralign 6:540.15}
+{txt}Log likelihood = {res}-9004.2439{col 57}{txt}{lalign 13:Prob > chi2} = {res}{ralign 6:0.0000}
+
+{txt}{hline 37}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                                  _t{col 38}{c |} Haz. ratio{col 50}   Std. err.{col 62}      z{col 70}   P>|z|{col 78}     [95% con{col 91}f. interval]
+{hline 37}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}infectionburdenhospbr {c |}{col 38}{res}{space 2} 3.179288{col 50}{space 2} .7836241{col 61}{space 1}    4.69{col 70}{space 3}0.000{col 78}{space 4} 1.961226{col 91}{space 3} 5.153855
+{txt}{space 26}AD_PGStert {c |}{col 38}{res}{space 2} 2.266366{col 50}{space 2} .1222868{col 61}{space 1}   15.16{col 70}{space 3}0.000{col 78}{space 4} 2.038927{col 91}{space 3} 2.519176
+{txt}{space 36} {c |}
+c.infectionburdenhospbr#c.AD_PGStert {c |}{col 38}{res}{space 2} .8705031{col 50}{space 2} .0846939{col 61}{space 1}   -1.43{col 70}{space 3}0.154{col 78}{space 4} .7193734{col 91}{space 3} 1.053383
+{txt}{space 36} {c |}
+{space 33}AGE {c |}{col 38}{res}{space 2} 1.031771{col 50}{space 2}  .012805{col 61}{space 1}    2.52{col 70}{space 3}0.012{col 78}{space 4} 1.006976{col 91}{space 3} 1.057176
+{txt}{space 33}SEX {c |}{col 38}{res}{space 2} .7515452{col 50}{space 2} .0485214{col 61}{space 1}   -4.42{col 70}{space 3}0.000{col 78}{space 4}  .662216{col 91}{space 3} .8529243
+{txt}{space 28}NonWhite {c |}{col 38}{res}{space 2} 1.109332{col 50}{space 2} .1882867{col 61}{space 1}    0.61{col 70}{space 3}0.541{col 78}{space 4} .7954035{col 91}{space 3} 1.547162
+{txt}{space 23}householdsize {c |}{col 38}{res}{space 2} .9278493{col 50}{space 2} .0391491{col 61}{space 1}   -1.77{col 70}{space 3}0.076{col 78}{space 4} .8542054{col 91}{space 3} 1.007842
+{txt}{space 33}SES {c |}{col 38}{res}{space 2} .8164691{col 50}{space 2} .0399133{col 61}{space 1}   -4.15{col 70}{space 3}0.000{col 78}{space 4} .7418713{col 91}{space 3}  .898568
+{txt}{space 22}LE8_TOTALSCORE {c |}{col 38}{res}{space 2} .9990084{col 50}{space 2} .0003526{col 61}{space 1}   -2.81{col 70}{space 3}0.005{col 78}{space 4} .9983176{col 91}{space 3} .9996998
+{txt}{hline 37}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. 
+. **Stratified analysis by AD PGS TERTILES**
+. 
+. **LOWEST TERTILE**
+. 
+.  stcox infectionburdenhospbr AGE SEX NonWhite householdsize SES LE8_TOTALSCORE  if sample_final==1 & AD_PGStert==1
+
+{col 10}{txt}Failure {bf:_d}: {res}dem_diag==1
+{col 4}{txt}Analysis time {bf:_t}: {res}Age_dementia
+{col 3}{txt}Enter on or after: {res}time baselineage
+{col 9}{txt}ID variable: {res}n_eid
+
+{txt}Iteration 0:  Log likelihood = {res} -1215.357
+{txt}Iteration 1:  Log likelihood = {res}-1189.5824
+{txt}Iteration 2:  Log likelihood = {res}-1186.4155
+{txt}Iteration 3:  Log likelihood = {res}-1186.4087
+{txt}Iteration 4:  Log likelihood = {res}-1186.4087
+{txt}Refining estimates:
+Iteration 0:  Log likelihood = {res}-1186.4087
+
+{txt}Cox regression with no ties
+
+No. of subjects = {res}{ralign 11:12,423}{col 57}{txt}{lalign 13:Number of obs} = {res}{ralign 6:12,423}
+{txt}No. of failures = {res}{ralign 11:146}
+{txt}Time at risk    = {res}{ralign 11:151,357.822}
+{col 57}{txt}{lalign 13:LR chi2({res:7})} = {res}{ralign 6:57.90}
+{txt}Log likelihood = {res}-1186.4087{col 57}{txt}{lalign 13:Prob > chi2} = {res}{ralign 6:0.0000}
+
+{txt}{hline 22}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                   _t{col 23}{c |} Haz. ratio{col 35}   Std. err.{col 47}      z{col 55}   P>|z|{col 63}     [95% con{col 76}f. interval]
+{hline 22}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+infectionburdenhospbr {c |}{col 23}{res}{space 2} 2.614332{col 35}{space 2} .4702775{col 46}{space 1}    5.34{col 55}{space 3}0.000{col 63}{space 4} 1.837566{col 76}{space 3} 3.719449
+{txt}{space 18}AGE {c |}{col 23}{res}{space 2} .9981364{col 35}{space 2} .0314269{col 46}{space 1}   -0.06{col 55}{space 3}0.953{col 63}{space 4} .9384029{col 76}{space 3} 1.061672
+{txt}{space 18}SEX {c |}{col 23}{res}{space 2} .5641127{col 35}{space 2} .0967299{col 46}{space 1}   -3.34{col 55}{space 3}0.001{col 63}{space 4} .4030955{col 76}{space 3} .7894483
+{txt}{space 13}NonWhite {c |}{col 23}{res}{space 2} 1.533475{col 35}{space 2} .5445724{col 46}{space 1}    1.20{col 55}{space 3}0.229{col 63}{space 4} .7645316{col 76}{space 3}   3.0758
+{txt}{space 8}householdsize {c |}{col 23}{res}{space 2} .9130505{col 35}{space 2} .0973076{col 46}{space 1}   -0.85{col 55}{space 3}0.393{col 63}{space 4} .7409326{col 76}{space 3} 1.125151
+{txt}{space 18}SES {c |}{col 23}{res}{space 2} .8542512{col 35}{space 2} .1064966{col 46}{space 1}   -1.26{col 55}{space 3}0.206{col 63}{space 4} .6690663{col 76}{space 3} 1.090692
+{txt}{space 7}LE8_TOTALSCORE {c |}{col 23}{res}{space 2} .9972894{col 35}{space 2} .0008883{col 46}{space 1}   -3.05{col 55}{space 3}0.002{col 63}{space 4} .9955499{col 76}{space 3}  .999032
+{txt}{hline 22}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. 
+. **MIDDLE TERTILE**
+. 
+.  stcox infectionburdenhospbr AGE SEX NonWhite householdsize SES LE8_TOTALSCORE if sample_final==1 & AD_PGStert==2
+
+{col 10}{txt}Failure {bf:_d}: {res}dem_diag==1
+{col 4}{txt}Analysis time {bf:_t}: {res}Age_dementia
+{col 3}{txt}Enter on or after: {res}time baselineage
+{col 9}{txt}ID variable: {res}n_eid
+
+{txt}Iteration 0:  Log likelihood = {res}-1997.2599
+{txt}Iteration 1:  Log likelihood = {res}-1959.1766
+{txt}Iteration 2:  Log likelihood = {res}-1955.2188
+{txt}Iteration 3:  Log likelihood = {res} -1955.212
+{txt}Refining estimates:
+Iteration 0:  Log likelihood = {res} -1955.212
+
+{txt}Cox regression with Breslow method for ties
+
+No. of subjects = {res}{ralign 11:12,423}{col 57}{txt}{lalign 13:Number of obs} = {res}{ralign 6:12,423}
+{txt}No. of failures = {res}{ralign 11:239}
+{txt}Time at risk    = {res}{ralign 11:151,704.357}
+{col 57}{txt}{lalign 13:LR chi2({res:7})} = {res}{ralign 6:84.10}
+{txt}Log likelihood = {res}-1955.212{col 57}{txt}{lalign 13:Prob > chi2} = {res}{ralign 6:0.0000}
+
+{txt}{hline 22}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                   _t{col 23}{c |} Haz. ratio{col 35}   Std. err.{col 47}      z{col 55}   P>|z|{col 63}     [95% con{col 76}f. interval]
+{hline 22}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+infectionburdenhospbr {c |}{col 23}{res}{space 2}  2.65161{col 35}{space 2} .3702759{col 46}{space 1}    6.98{col 55}{space 3}0.000{col 63}{space 4} 2.016723{col 76}{space 3} 3.486367
+{txt}{space 18}AGE {c |}{col 23}{res}{space 2} .9607399{col 35}{space 2} .0238739{col 46}{space 1}   -1.61{col 55}{space 3}0.107{col 63}{space 4} .9150691{col 76}{space 3}  1.00869
+{txt}{space 18}SEX {c |}{col 23}{res}{space 2} .5462471{col 35}{space 2} .0731082{col 46}{space 1}   -4.52{col 55}{space 3}0.000{col 63}{space 4} .4202104{col 76}{space 3}  .710087
+{txt}{space 13}NonWhite {c |}{col 23}{res}{space 2} .5501247{col 35}{space 2} .2503727{col 46}{space 1}   -1.31{col 55}{space 3}0.189{col 63}{space 4} .2254563{col 76}{space 3} 1.342332
+{txt}{space 8}householdsize {c |}{col 23}{res}{space 2} .8857273{col 35}{space 2} .0779039{col 46}{space 1}   -1.38{col 55}{space 3}0.168{col 63}{space 4} .7454745{col 76}{space 3} 1.052367
+{txt}{space 18}SES {c |}{col 23}{res}{space 2} .7833178{col 35}{space 2} .0774507{col 46}{space 1}   -2.47{col 55}{space 3}0.014{col 63}{space 4} .6453202{col 76}{space 3} .9508252
+{txt}{space 7}LE8_TOTALSCORE {c |}{col 23}{res}{space 2} .9987274{col 35}{space 2} .0007168{col 46}{space 1}   -1.77{col 55}{space 3}0.076{col 63}{space 4} .9973234{col 76}{space 3} 1.000133
+{txt}{hline 22}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. 
+. **HIGHEST TERTILE**
+.  stcox infectionburdenhospbr AGE SEX NonWhite householdsize SES LE8_TOTALSCORE if sample_final==1 & AD_PGStert==3
+
+{col 10}{txt}Failure {bf:_d}: {res}dem_diag==1
+{col 4}{txt}Analysis time {bf:_t}: {res}Age_dementia
+{col 3}{txt}Enter on or after: {res}time baselineage
+{col 9}{txt}ID variable: {res}n_eid
+
+{txt}Iteration 0:  Log likelihood = {res}-4972.5806
+{txt}Iteration 1:  Log likelihood = {res} -4925.768
+{txt}Iteration 2:  Log likelihood = {res}-4922.5971
+{txt}Iteration 3:  Log likelihood = {res}-4922.5909
+{txt}Refining estimates:
+Iteration 0:  Log likelihood = {res}-4922.5909
+
+{txt}Cox regression with Breslow method for ties
+
+No. of subjects = {res}{ralign 11:12,423}{col 57}{txt}{lalign 13:Number of obs} = {res}{ralign 6:12,423}
+{txt}No. of failures = {res}{ralign 11:603}
+{txt}Time at risk    = {res}{ralign 11:149,622.771}
+{col 57}{txt}{lalign 13:LR chi2({res:7})} = {res}{ralign 6:99.98}
+{txt}Log likelihood = {res}-4922.5909{col 57}{txt}{lalign 13:Prob > chi2} = {res}{ralign 6:0.0000}
+
+{txt}{hline 22}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                   _t{col 23}{c |} Haz. ratio{col 35}   Std. err.{col 47}      z{col 55}   P>|z|{col 63}     [95% con{col 76}f. interval]
+{hline 22}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+infectionburdenhospbr {c |}{col 23}{res}{space 2}  2.07422{col 35}{space 2} .1926589{col 46}{space 1}    7.85{col 55}{space 3}0.000{col 63}{space 4} 1.728992{col 76}{space 3}  2.48838
+{txt}{space 18}AGE {c |}{col 23}{res}{space 2} 1.070872{col 35}{space 2} .0172957{col 46}{space 1}    4.24{col 55}{space 3}0.000{col 63}{space 4} 1.037504{col 76}{space 3} 1.105313
+{txt}{space 18}SEX {c |}{col 23}{res}{space 2} .9128009{col 35}{space 2} .0752887{col 46}{space 1}   -1.11{col 55}{space 3}0.269{col 63}{space 4} .7765478{col 76}{space 3} 1.072961
+{txt}{space 13}NonWhite {c |}{col 23}{res}{space 2} 1.212482{col 35}{space 2} .2608183{col 46}{space 1}    0.90{col 55}{space 3}0.370{col 63}{space 4} .7953762{col 76}{space 3} 1.848325
+{txt}{space 8}householdsize {c |}{col 23}{res}{space 2} .9499405{col 35}{space 2} .0483814{col 46}{space 1}   -1.01{col 55}{space 3}0.313{col 63}{space 4}  .859694{col 76}{space 3} 1.049661
+{txt}{space 18}SES {c |}{col 23}{res}{space 2} .8226077{col 35}{space 2} .0517573{col 46}{space 1}   -3.10{col 55}{space 3}0.002{col 63}{space 4} .7271708{col 76}{space 3} .9305702
+{txt}{space 7}LE8_TOTALSCORE {c |}{col 23}{res}{space 2} .9995761{col 35}{space 2} .0004554{col 46}{space 1}   -0.93{col 55}{space 3}0.352{col 63}{space 4}  .998684{col 76}{space 3} 1.000469
+{txt}{hline 22}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. 
+. ***********************************************AMONG MEN***************************************
+. 
+. **Model 1**
+. 
+.  stcox infectionburdenhospbr AGE SEX NonWhite householdsize SES LE8_TOTALSCORE if SEX==1 & sample_final==1
+
+{col 10}{txt}Failure {bf:_d}: {res}dem_diag==1
+{col 4}{txt}Analysis time {bf:_t}: {res}Age_dementia
+{col 3}{txt}Enter on or after: {res}time baselineage
+{col 9}{txt}ID variable: {res}n_eid
+
+{txt}note: {bf:SEX} omitted because of collinearity.
+Iteration 0:  Log likelihood = {res}-4669.9705
+{txt}Iteration 1:  Log likelihood = {res}-4623.5354
+{txt}Iteration 2:  Log likelihood = {res}-4619.1464
+{txt}Iteration 3:  Log likelihood = {res}-4619.1371
+{txt}Refining estimates:
+Iteration 0:  Log likelihood = {res}-4619.1371
+
+{txt}Cox regression with Breslow method for ties
+
+No. of subjects = {res}{ralign 10:17,480}{col 57}{txt}{lalign 13:Number of obs} = {res}{ralign 6:17,480}
+{txt}No. of failures = {res}{ralign 10:539}
+{txt}Time at risk    = {res}{ralign 10:209,014.47}
+{col 57}{txt}{lalign 13:LR chi2({res:6})} = {res}{ralign 6:101.67}
+{txt}Log likelihood = {res}-4619.1371{col 57}{txt}{lalign 13:Prob > chi2} = {res}{ralign 6:0.0000}
+
+{txt}{hline 22}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                   _t{col 23}{c |} Haz. ratio{col 35}   Std. err.{col 47}      z{col 55}   P>|z|{col 63}     [95% con{col 76}f. interval]
+{hline 22}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+infectionburdenhospbr {c |}{col 23}{res}{space 2} 2.188007{col 35}{space 2} .2112481{col 46}{space 1}    8.11{col 55}{space 3}0.000{col 63}{space 4} 1.810784{col 76}{space 3} 2.643812
+{txt}{space 18}AGE {c |}{col 23}{res}{space 2} 1.044578{col 35}{space 2} .0177826{col 46}{space 1}    2.56{col 55}{space 3}0.010{col 63}{space 4} 1.010299{col 76}{space 3} 1.080019
+{txt}{space 18}SEX {c |}{col 23}{res}{space 2}        1{col 35}{txt}  (omitted)
+{space 13}NonWhite {c |}{col 23}{res}{space 2} 1.024494{col 35}{space 2} .2368404{col 46}{space 1}    0.10{col 55}{space 3}0.917{col 63}{space 4} .6512243{col 76}{space 3} 1.611716
+{txt}{space 8}householdsize {c |}{col 23}{res}{space 2} .9326177{col 35}{space 2} .0530728{col 46}{space 1}   -1.23{col 55}{space 3}0.220{col 63}{space 4} .8341882{col 76}{space 3} 1.042661
+{txt}{space 18}SES {c |}{col 23}{res}{space 2} .7982357{col 35}{space 2}  .051346{col 46}{space 1}   -3.50{col 55}{space 3}0.000{col 63}{space 4} .7036847{col 76}{space 3} .9054911
+{txt}{space 7}LE8_TOTALSCORE {c |}{col 23}{res}{space 2} .9990503{col 35}{space 2} .0004848{col 46}{space 1}   -1.96{col 55}{space 3}0.050{col 63}{space 4} .9981005{col 76}{space 3} 1.000001
+{txt}{hline 22}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. 
+. **Model 2: Interaction with AD PGS TERTILE **
+.  stcox c.infectionburdenhospbr##c.AD_PGStert AGE SEX NonWhite householdsize SES LE8_TOTALSCORE if SEX==1 & sample_final==1
+
+{col 10}{txt}Failure {bf:_d}: {res}dem_diag==1
+{col 4}{txt}Analysis time {bf:_t}: {res}Age_dementia
+{col 3}{txt}Enter on or after: {res}time baselineage
+{col 9}{txt}ID variable: {res}n_eid
+
+{txt}note: {bf:SEX} omitted because of collinearity.
+Iteration 0:  Log likelihood = {res}-4669.9705
+{txt}Iteration 1:  Log likelihood = {res} -4576.993
+{txt}Iteration 2:  Log likelihood = {res}-4551.0776
+{txt}Iteration 3:  Log likelihood = {res}-4550.5827
+{txt}Iteration 4:  Log likelihood = {res}-4550.5822
+{txt}Refining estimates:
+Iteration 0:  Log likelihood = {res}-4550.5822
+
+{txt}Cox regression with Breslow method for ties
+
+No. of subjects = {res}{ralign 10:17,480}{col 57}{txt}{lalign 13:Number of obs} = {res}{ralign 6:17,480}
+{txt}No. of failures = {res}{ralign 10:539}
+{txt}Time at risk    = {res}{ralign 10:209,014.47}
+{col 57}{txt}{lalign 13:LR chi2({res:8})} = {res}{ralign 6:238.78}
+{txt}Log likelihood = {res}-4550.5822{col 57}{txt}{lalign 13:Prob > chi2} = {res}{ralign 6:0.0000}
+
+{txt}{hline 37}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                                  _t{col 38}{c |} Haz. ratio{col 50}   Std. err.{col 62}      z{col 70}   P>|z|{col 78}     [95% con{col 91}f. interval]
+{hline 37}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}infectionburdenhospbr {c |}{col 38}{res}{space 2} 3.005263{col 50}{space 2} .9451783{col 61}{space 1}    3.50{col 70}{space 3}0.000{col 78}{space 4} 1.622457{col 91}{space 3} 5.566624
+{txt}{space 26}AD_PGStert {c |}{col 38}{res}{space 2} 1.984874{col 50}{space 2} .1385905{col 61}{space 1}    9.82{col 70}{space 3}0.000{col 78}{space 4} 1.731009{col 91}{space 3} 2.275971
+{txt}{space 36} {c |}
+c.infectionburdenhospbr#c.AD_PGStert {c |}{col 38}{res}{space 2}  .881106{col 50}{space 2} .1120653{col 61}{space 1}   -1.00{col 70}{space 3}0.320{col 78}{space 4} .6866988{col 91}{space 3} 1.130551
+{txt}{space 36} {c |}
+{space 33}AGE {c |}{col 38}{res}{space 2} 1.042271{col 50}{space 2} .0176642{col 61}{space 1}    2.44{col 70}{space 3}0.015{col 78}{space 4} 1.008218{col 91}{space 3} 1.077474
+{txt}{space 33}SEX {c |}{col 38}{res}{space 2}        1{col 50}{txt}  (omitted)
+{space 28}NonWhite {c |}{col 38}{res}{space 2}  1.06278{col 50}{space 2} .2454901{col 61}{space 1}    0.26{col 70}{space 3}0.792{col 78}{space 4} .6758115{col 91}{space 3} 1.671326
+{txt}{space 23}householdsize {c |}{col 38}{res}{space 2} .9207467{col 50}{space 2} .0532536{col 61}{space 1}   -1.43{col 70}{space 3}0.153{col 78}{space 4} .8220702{col 91}{space 3} 1.031268
+{txt}{space 33}SES {c |}{col 38}{res}{space 2} .7887793{col 50}{space 2} .0508186{col 61}{space 1}   -3.68{col 70}{space 3}0.000{col 78}{space 4} .6952087{col 91}{space 3} .8949438
+{txt}{space 22}LE8_TOTALSCORE {c |}{col 38}{res}{space 2} .9989716{col 50}{space 2} .0004846{col 61}{space 1}   -2.12{col 70}{space 3}0.034{col 78}{space 4} .9980222{col 91}{space 3} .9999219
+{txt}{hline 37}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. 
+. **Stratif SEX==1 by AD PGS TERTILES**
+. 
+. **LOWEST TERTILE**
+. 
+.  stcox infectionburdenhospbr AGE SEX NonWhite householdsize SES LE8_TOTALSCORE if SEX==1 & sample_final==1 & AD_PGStert==1
+
+{col 10}{txt}Failure {bf:_d}: {res}dem_diag==1
+{col 4}{txt}Analysis time {bf:_t}: {res}Age_dementia
+{col 3}{txt}Enter on or after: {res}time baselineage
+{col 9}{txt}ID variable: {res}n_eid
+
+{txt}note: {bf:SEX} omitted because of collinearity.
+Iteration 0:  Log likelihood = {res}-693.09823
+{txt}Iteration 1:  Log likelihood = {res}-675.77865
+{txt}Iteration 2:  Log likelihood = {res}-673.43218
+{txt}Iteration 3:  Log likelihood = {res}-673.42518
+{txt}Iteration 4:  Log likelihood = {res}-673.42518
+{txt}Refining estimates:
+Iteration 0:  Log likelihood = {res}-673.42518
+
+{txt}Cox regression with no ties
+
+No. of subjects = {res}{ralign 11:5,832}{col 57}{txt}{lalign 13:Number of obs} = {res}{ralign 6:5,832}
+{txt}No. of failures = {res}{ralign 11:90}
+{txt}Time at risk    = {res}{ralign 11:69,900.9095}
+{col 57}{txt}{lalign 13:LR chi2({res:6})} = {res}{ralign 6:39.35}
+{txt}Log likelihood = {res}-673.42518{col 57}{txt}{lalign 13:Prob > chi2} = {res}{ralign 6:0.0000}
+
+{txt}{hline 22}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                   _t{col 23}{c |} Haz. ratio{col 35}   Std. err.{col 47}      z{col 55}   P>|z|{col 63}     [95% con{col 76}f. interval]
+{hline 22}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+infectionburdenhospbr {c |}{col 23}{res}{space 2} 2.428849{col 35}{space 2} .5600585{col 46}{space 1}    3.85{col 55}{space 3}0.000{col 63}{space 4} 1.545701{col 76}{space 3} 3.816592
+{txt}{space 18}AGE {c |}{col 23}{res}{space 2}  .997159{col 35}{space 2} .0386593{col 46}{space 1}   -0.07{col 55}{space 3}0.942{col 63}{space 4} .9241955{col 76}{space 3} 1.075883
+{txt}{space 18}SEX {c |}{col 23}{res}{space 2}        1{col 35}{txt}  (omitted)
+{space 13}NonWhite {c |}{col 23}{res}{space 2} 1.089323{col 35}{space 2} .5687951{col 46}{space 1}    0.16{col 55}{space 3}0.870{col 63}{space 4} .3914694{col 76}{space 3} 3.031207
+{txt}{space 8}householdsize {c |}{col 23}{res}{space 2} .8476798{col 35}{space 2} .1202794{col 46}{space 1}   -1.16{col 55}{space 3}0.244{col 63}{space 4} .6418784{col 76}{space 3} 1.119466
+{txt}{space 18}SES {c |}{col 23}{res}{space 2}  .738612{col 35}{space 2} .1143109{col 46}{space 1}   -1.96{col 55}{space 3}0.050{col 63}{space 4} .5453565{col 76}{space 3}  1.00035
+{txt}{space 7}LE8_TOTALSCORE {c |}{col 23}{res}{space 2} .9964019{col 35}{space 2} .0011328{col 46}{space 1}   -3.17{col 55}{space 3}0.002{col 63}{space 4} .9941842{col 76}{space 3} .9986245
+{txt}{hline 22}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. **MIDDLE TERTILE**
+. 
+.  stcox infectionburdenhospbr AGE SEX NonWhite householdsize SES LE8_TOTALSCORE if SEX==1 & sample_final==1 & AD_PGStert==2
+
+{col 10}{txt}Failure {bf:_d}: {res}dem_diag==1
+{col 4}{txt}Analysis time {bf:_t}: {res}Age_dementia
+{col 3}{txt}Enter on or after: {res}time baselineage
+{col 9}{txt}ID variable: {res}n_eid
+
+{txt}note: {bf:SEX} omitted because of collinearity.
+Iteration 0:  Log likelihood = {res}-1111.8069
+{txt}Iteration 1:  Log likelihood = {res}-1095.8078
+{txt}Iteration 2:  Log likelihood = {res}-1093.8218
+{txt}Iteration 3:  Log likelihood = {res}-1093.8177
+{txt}Iteration 4:  Log likelihood = {res}-1093.8177
+{txt}Refining estimates:
+Iteration 0:  Log likelihood = {res}-1093.8177
+
+{txt}Cox regression with Breslow method for ties
+
+No. of subjects = {res}{ralign 11:5,810}{col 57}{txt}{lalign 13:Number of obs} = {res}{ralign 6:5,810}
+{txt}No. of failures = {res}{ralign 11:147}
+{txt}Time at risk    = {res}{ralign 11:69,928.0713}
+{col 57}{txt}{lalign 13:LR chi2({res:6})} = {res}{ralign 6:35.98}
+{txt}Log likelihood = {res}-1093.8177{col 57}{txt}{lalign 13:Prob > chi2} = {res}{ralign 6:0.0000}
+
+{txt}{hline 22}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                   _t{col 23}{c |} Haz. ratio{col 35}   Std. err.{col 47}      z{col 55}   P>|z|{col 63}     [95% con{col 76}f. interval]
+{hline 22}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+infectionburdenhospbr {c |}{col 23}{res}{space 2}  2.52187{col 35}{space 2} .4535683{col 46}{space 1}    5.14{col 55}{space 3}0.000{col 63}{space 4} 1.772681{col 76}{space 3} 3.587688
+{txt}{space 18}AGE {c |}{col 23}{res}{space 2} .9691813{col 35}{space 2} .0318546{col 46}{space 1}   -0.95{col 55}{space 3}0.341{col 63}{space 4}  .908716{col 76}{space 3}  1.03367
+{txt}{space 18}SEX {c |}{col 23}{res}{space 2}        1{col 35}{txt}  (omitted)
+{space 13}NonWhite {c |}{col 23}{res}{space 2} .5073747{col 35}{space 2}   .29799{col 46}{space 1}   -1.16{col 55}{space 3}0.248{col 63}{space 4} .1604735{col 76}{space 3} 1.604185
+{txt}{space 8}householdsize {c |}{col 23}{res}{space 2} .9453783{col 35}{space 2} .0983263{col 46}{space 1}   -0.54{col 55}{space 3}0.589{col 63}{space 4} .7710356{col 76}{space 3} 1.159143
+{txt}{space 18}SES {c |}{col 23}{res}{space 2}  .787679{col 35}{space 2} .0970997{col 46}{space 1}   -1.94{col 55}{space 3}0.053{col 63}{space 4} .6186129{col 76}{space 3} 1.002951
+{txt}{space 7}LE8_TOTALSCORE {c |}{col 23}{res}{space 2} .9985565{col 35}{space 2} .0009431{col 46}{space 1}   -1.53{col 55}{space 3}0.126{col 63}{space 4} .9967098{col 76}{space 3} 1.000407
+{txt}{hline 22}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. 
+. **HIGHEST TERTILE**
+.  stcox infectionburdenhospbr AGE SEX NonWhite householdsize SES LE8_TOTALSCORE  if SEX==1 & sample_final==1 & AD_PGStert==3
+
+{col 10}{txt}Failure {bf:_d}: {res}dem_diag==1
+{col 4}{txt}Analysis time {bf:_t}: {res}Age_dementia
+{col 3}{txt}Enter on or after: {res}time baselineage
+{col 9}{txt}ID variable: {res}n_eid
+
+{txt}note: {bf:SEX} omitted because of collinearity.
+Iteration 0:  Log likelihood = {res}-2272.2837
+{txt}Iteration 1:  Log likelihood = {res}-2245.4004
+{txt}Iteration 2:  Log likelihood = {res}-2243.8785
+{txt}Iteration 3:  Log likelihood = {res}-2243.8756
+{txt}Refining estimates:
+Iteration 0:  Log likelihood = {res}-2243.8756
+
+{txt}Cox regression with Breslow method for ties
+
+No. of subjects = {res}{ralign 11:5,838}{col 57}{txt}{lalign 13:Number of obs} = {res}{ralign 6:5,838}
+{txt}No. of failures = {res}{ralign 11:302}
+{txt}Time at risk    = {res}{ralign 11:69,185.4896}
+{col 57}{txt}{lalign 13:LR chi2({res:6})} = {res}{ralign 6:56.82}
+{txt}Log likelihood = {res}-2243.8756{col 57}{txt}{lalign 13:Prob > chi2} = {res}{ralign 6:0.0000}
+
+{txt}{hline 22}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                   _t{col 23}{c |} Haz. ratio{col 35}   Std. err.{col 47}      z{col 55}   P>|z|{col 63}     [95% con{col 76}f. interval]
+{hline 22}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+infectionburdenhospbr {c |}{col 23}{res}{space 2} 2.030494{col 35}{space 2} .2685639{col 46}{space 1}    5.35{col 55}{space 3}0.000{col 63}{space 4} 1.566814{col 76}{space 3} 2.631396
+{txt}{space 18}AGE {c |}{col 23}{res}{space 2} 1.095809{col 35}{space 2} .0255938{col 46}{space 1}    3.92{col 55}{space 3}0.000{col 63}{space 4} 1.046777{col 76}{space 3} 1.147137
+{txt}{space 18}SEX {c |}{col 23}{res}{space 2}        1{col 35}{txt}  (omitted)
+{space 13}NonWhite {c |}{col 23}{res}{space 2} 1.373104{col 35}{space 2} .3958147{col 46}{space 1}    1.10{col 55}{space 3}0.271{col 63}{space 4} .7804296{col 76}{space 3} 2.415868
+{txt}{space 8}householdsize {c |}{col 23}{res}{space 2} .9354256{col 35}{space 2} .0744617{col 46}{space 1}   -0.84{col 55}{space 3}0.402{col 63}{space 4} .8002984{col 76}{space 3} 1.093369
+{txt}{space 18}SES {c |}{col 23}{res}{space 2} .8113683{col 35}{space 2} .0706717{col 46}{space 1}   -2.40{col 55}{space 3}0.016{col 63}{space 4} .6840326{col 76}{space 3} .9624081
+{txt}{space 7}LE8_TOTALSCORE {c |}{col 23}{res}{space 2} .9999811{col 35}{space 2}  .000649{col 46}{space 1}   -0.03{col 55}{space 3}0.977{col 63}{space 4} .9987099{col 76}{space 3} 1.001254
+{txt}{hline 22}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. 
+. 
+. 
+. ************************************************AMONG WOMEN***************************************
+. 
+. 
+. 
+. 
+. **Model 1**
+. 
+.  stcox infectionburdenhospbr AGE SEX NonWhite householdsize SES LE8_TOTALSCORE if SEX==2 & sample_final==1
+
+{col 10}{txt}Failure {bf:_d}: {res}dem_diag==1
+{col 4}{txt}Analysis time {bf:_t}: {res}Age_dementia
+{col 3}{txt}Enter on or after: {res}time baselineage
+{col 9}{txt}ID variable: {res}n_eid
+
+{txt}note: {bf:SEX} omitted because of collinearity.
+Iteration 0:  Log likelihood = {res}-3915.6825
+{txt}Iteration 1:  Log likelihood = {res}-3881.2193
+{txt}Iteration 2:  Log likelihood = {res}  -3877.28
+{txt}Iteration 3:  Log likelihood = {res}-3877.2721
+{txt}Refining estimates:
+Iteration 0:  Log likelihood = {res}-3877.2721
+
+{txt}Cox regression with Breslow method for ties
+
+No. of subjects = {res}{ralign 11:19,789}{col 57}{txt}{lalign 13:Number of obs} = {res}{ralign 6:19,789}
+{txt}No. of failures = {res}{ralign 11:449}
+{txt}Time at risk    = {res}{ralign 11:243,670.479}
+{col 57}{txt}{lalign 13:LR chi2({res:6})} = {res}{ralign 6:76.82}
+{txt}Log likelihood = {res}-3877.2721{col 57}{txt}{lalign 13:Prob > chi2} = {res}{ralign 6:0.0000}
+
+{txt}{hline 22}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                   _t{col 23}{c |} Haz. ratio{col 35}   Std. err.{col 47}      z{col 55}   P>|z|{col 63}     [95% con{col 76}f. interval]
+{hline 22}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+infectionburdenhospbr {c |}{col 23}{res}{space 2} 2.293543{col 35}{space 2} .2396872{col 46}{space 1}    7.94{col 55}{space 3}0.000{col 63}{space 4} 1.868753{col 76}{space 3} 2.814893
+{txt}{space 18}AGE {c |}{col 23}{res}{space 2}  1.02132{col 35}{space 2} .0188065{col 46}{space 1}    1.15{col 55}{space 3}0.252{col 63}{space 4} .9851167{col 76}{space 3} 1.058853
+{txt}{space 18}SEX {c |}{col 23}{res}{space 2}        1{col 35}{txt}  (omitted)
+{space 13}NonWhite {c |}{col 23}{res}{space 2} 1.114399{col 35}{space 2} .2797456{col 46}{space 1}    0.43{col 55}{space 3}0.666{col 63}{space 4} .6813415{col 76}{space 3} 1.822704
+{txt}{space 8}householdsize {c |}{col 23}{res}{space 2} .9361691{col 35}{space 2} .0578154{col 46}{space 1}   -1.07{col 55}{space 3}0.286{col 63}{space 4} .8294425{col 76}{space 3} 1.056628
+{txt}{space 18}SES {c |}{col 23}{res}{space 2} .8564214{col 35}{space 2} .0644658{col 46}{space 1}   -2.06{col 55}{space 3}0.039{col 63}{space 4} .7389493{col 76}{space 3} .9925683
+{txt}{space 7}LE8_TOTALSCORE {c |}{col 23}{res}{space 2} .9990526{col 35}{space 2} .0005125{col 46}{space 1}   -1.85{col 55}{space 3}0.065{col 63}{space 4} .9980485{col 76}{space 3} 1.000058
+{txt}{hline 22}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. 
+. **Model 2: Interaction with AD PGS TOTAL SCORE**
+.  stcox c.infectionburdenhospbr##c.AD_PGStert AGE SEX NonWhite householdsize SES LE8_TOTALSCORE if SEX==2 & sample_final==1
+
+{col 10}{txt}Failure {bf:_d}: {res}dem_diag==1
+{col 4}{txt}Analysis time {bf:_t}: {res}Age_dementia
+{col 3}{txt}Enter on or after: {res}time baselineage
+{col 9}{txt}ID variable: {res}n_eid
+
+{txt}note: {bf:SEX} omitted because of collinearity.
+Iteration 0:  Log likelihood = {res}-3915.6825
+{txt}Iteration 1:  Log likelihood = {res}-3814.3158
+{txt}Iteration 2:  Log likelihood = {res}-3768.2754
+{txt}Iteration 3:  Log likelihood = {res}-3767.4874
+{txt}Iteration 4:  Log likelihood = {res}-3767.4865
+{txt}Refining estimates:
+Iteration 0:  Log likelihood = {res}-3767.4865
+
+{txt}Cox regression with Breslow method for ties
+
+No. of subjects = {res}{ralign 11:19,789}{col 57}{txt}{lalign 13:Number of obs} = {res}{ralign 6:19,789}
+{txt}No. of failures = {res}{ralign 11:449}
+{txt}Time at risk    = {res}{ralign 11:243,670.479}
+{col 57}{txt}{lalign 13:LR chi2({res:8})} = {res}{ralign 6:296.39}
+{txt}Log likelihood = {res}-3767.4865{col 57}{txt}{lalign 13:Prob > chi2} = {res}{ralign 6:0.0000}
+
+{txt}{hline 37}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                                  _t{col 38}{c |} Haz. ratio{col 50}   Std. err.{col 62}      z{col 70}   P>|z|{col 78}     [95% con{col 91}f. interval]
+{hline 37}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 15}infectionburdenhospbr {c |}{col 38}{res}{space 2} 3.453015{col 50}{space 2} 1.371298{col 61}{space 1}    3.12{col 70}{space 3}0.002{col 78}{space 4} 1.585478{col 91}{space 3} 7.520326
+{txt}{space 26}AD_PGStert {c |}{col 38}{res}{space 2} 2.708261{col 50}{space 2} .2326802{col 61}{space 1}   11.60{col 70}{space 3}0.000{col 78}{space 4} 2.288545{col 91}{space 3} 3.204951
+{txt}{space 36} {c |}
+c.infectionburdenhospbr#c.AD_PGStert {c |}{col 38}{res}{space 2}  .853004{col 50}{space 2} .1301177{col 61}{space 1}   -1.04{col 70}{space 3}0.297{col 78}{space 4} .6325696{col 91}{space 3} 1.150254
+{txt}{space 36} {c |}
+{space 33}AGE {c |}{col 38}{res}{space 2} 1.019642{col 50}{space 2} .0186591{col 61}{space 1}    1.06{col 70}{space 3}0.288{col 78}{space 4} .9837187{col 91}{space 3} 1.056877
+{txt}{space 33}SEX {c |}{col 38}{res}{space 2}        1{col 50}{txt}  (omitted)
+{space 28}NonWhite {c |}{col 38}{res}{space 2} 1.171213{col 50}{space 2} .2930753{col 61}{space 1}    0.63{col 70}{space 3}0.528{col 78}{space 4} .7171958{col 91}{space 3} 1.912643
+{txt}{space 23}householdsize {c |}{col 38}{res}{space 2}  .939172{col 50}{space 2} .0557662{col 61}{space 1}   -1.06{col 70}{space 3}0.291{col 78}{space 4} .8359927{col 91}{space 3} 1.055086
+{txt}{space 33}SES {c |}{col 38}{res}{space 2}  .857769{col 50}{space 2} .0643729{col 61}{space 1}   -2.04{col 70}{space 3}0.041{col 78}{space 4} .7404407{col 91}{space 3} .9936887
+{txt}{space 22}LE8_TOTALSCORE {c |}{col 38}{res}{space 2} .9990522{col 50}{space 2} .0005169{col 61}{space 1}   -1.83{col 70}{space 3}0.067{col 78}{space 4} .9980397{col 91}{space 3} 1.000066
+{txt}{hline 37}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. 
+. **Stratif SEX==2  by AD PGS TERTILES**
+. 
+. **LOWEST TERTILE**
+. 
+.  stcox infectionburdenhospbr AGE SEX NonWhite householdsize SES LE8_TOTALSCORE if SEX==2 & sample_final==1 & AD_PGStert==1
+
+{col 10}{txt}Failure {bf:_d}: {res}dem_diag==1
+{col 4}{txt}Analysis time {bf:_t}: {res}Age_dementia
+{col 3}{txt}Enter on or after: {res}time baselineage
+{col 9}{txt}ID variable: {res}n_eid
+
+{txt}note: {bf:SEX} omitted because of collinearity.
+Iteration 0:  Log likelihood = {res}-419.20357
+{txt}Iteration 1:  Log likelihood = {res}-413.43108
+{txt}Iteration 2:  Log likelihood = {res}-411.59088
+{txt}Iteration 3:  Log likelihood = {res}-411.56738
+{txt}Iteration 4:  Log likelihood = {res}-411.56735
+{txt}Refining estimates:
+Iteration 0:  Log likelihood = {res}-411.56735
+
+{txt}Cox regression with no ties
+
+No. of subjects = {res}{ralign 11:6,591}{col 57}{txt}{lalign 13:Number of obs} = {res}{ralign 6:6,591}
+{txt}No. of failures = {res}{ralign 11:56}
+{txt}Time at risk    = {res}{ralign 11:81,456.9123}
+{col 57}{txt}{lalign 13:LR chi2({res:6})} = {res}{ralign 6:15.27}
+{txt}Log likelihood = {res}-411.56735{col 57}{txt}{lalign 13:Prob > chi2} = {res}{ralign 6:0.0182}
+
+{txt}{hline 22}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                   _t{col 23}{c |} Haz. ratio{col 35}   Std. err.{col 47}      z{col 55}   P>|z|{col 63}     [95% con{col 76}f. interval]
+{hline 22}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+infectionburdenhospbr {c |}{col 23}{res}{space 2} 2.847424{col 35}{space 2} .8215989{col 46}{space 1}    3.63{col 55}{space 3}0.000{col 63}{space 4} 1.617505{col 76}{space 3} 5.012551
+{txt}{space 18}AGE {c |}{col 23}{res}{space 2} .9985795{col 35}{space 2} .0539554{col 46}{space 1}   -0.03{col 55}{space 3}0.979{col 63}{space 4} .8982359{col 76}{space 3} 1.110133
+{txt}{space 18}SEX {c |}{col 23}{res}{space 2}        1{col 35}{txt}  (omitted)
+{space 13}NonWhite {c |}{col 23}{res}{space 2} 2.405958{col 35}{space 2} 1.185888{col 46}{space 1}    1.78{col 55}{space 3}0.075{col 63}{space 4} .9156587{col 76}{space 3} 6.321823
+{txt}{space 8}householdsize {c |}{col 23}{res}{space 2} 1.019907{col 35}{space 2} .1472371{col 46}{space 1}    0.14{col 55}{space 3}0.891{col 63}{space 4} .7685613{col 76}{space 3} 1.353452
+{txt}{space 18}SES {c |}{col 23}{res}{space 2} 1.141648{col 35}{space 2} .2421217{col 46}{space 1}    0.62{col 55}{space 3}0.532{col 63}{space 4} .7533709{col 76}{space 3} 1.730039
+{txt}{space 7}LE8_TOTALSCORE {c |}{col 23}{res}{space 2} .9988018{col 35}{space 2} .0014303{col 46}{space 1}   -0.84{col 55}{space 3}0.402{col 63}{space 4} .9960024{col 76}{space 3} 1.001609
+{txt}{hline 22}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. 
+. **MIDDLE TERTILE**
+. 
+.  stcox infectionburdenhospbr AGE SEX NonWhite householdsize SES LE8_TOTALSCORE if SEX==2 & sample_final==1 & AD_PGStert==2
+
+{col 10}{txt}Failure {bf:_d}: {res}dem_diag==1
+{col 4}{txt}Analysis time {bf:_t}: {res}Age_dementia
+{col 3}{txt}Enter on or after: {res}time baselineage
+{col 9}{txt}ID variable: {res}n_eid
+
+{txt}note: {bf:SEX} omitted because of collinearity.
+Iteration 0:  Log likelihood = {res}-718.50141
+{txt}Iteration 1:  Log likelihood = {res}-704.90363
+{txt}Iteration 2:  Log likelihood = {res}-702.43111
+{txt}Iteration 3:  Log likelihood = {res}-702.42805
+{txt}Refining estimates:
+Iteration 0:  Log likelihood = {res}-702.42805
+
+{txt}Cox regression with no ties
+
+No. of subjects = {res}{ralign 11:6,613}{col 57}{txt}{lalign 13:Number of obs} = {res}{ralign 6:6,613}
+{txt}No. of failures = {res}{ralign 11:92}
+{txt}Time at risk    = {res}{ralign 11:81,776.2854}
+{col 57}{txt}{lalign 13:LR chi2({res:6})} = {res}{ralign 6:32.15}
+{txt}Log likelihood = {res}-702.42805{col 57}{txt}{lalign 13:Prob > chi2} = {res}{ralign 6:0.0000}
+
+{txt}{hline 22}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                   _t{col 23}{c |} Haz. ratio{col 35}   Std. err.{col 47}      z{col 55}   P>|z|{col 63}     [95% con{col 76}f. interval]
+{hline 22}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+infectionburdenhospbr {c |}{col 23}{res}{space 2} 2.898939{col 35}{space 2} .6438612{col 46}{space 1}    4.79{col 55}{space 3}0.000{col 63}{space 4} 1.875794{col 76}{space 3} 4.480154
+{txt}{space 18}AGE {c |}{col 23}{res}{space 2} .9505379{col 35}{space 2} .0360729{col 46}{space 1}   -1.34{col 55}{space 3}0.181{col 63}{space 4} .8824018{col 76}{space 3} 1.023935
+{txt}{space 18}SEX {c |}{col 23}{res}{space 2}        1{col 35}{txt}  (omitted)
+{space 13}NonWhite {c |}{col 23}{res}{space 2} .6007236{col 35}{space 2} .4332386{col 46}{space 1}   -0.71{col 55}{space 3}0.480{col 63}{space 4}  .146148{col 76}{space 3} 2.469202
+{txt}{space 8}householdsize {c |}{col 23}{res}{space 2} .7797403{col 35}{space 2} .1199993{col 46}{space 1}   -1.62{col 55}{space 3}0.106{col 63}{space 4} .5767041{col 76}{space 3} 1.054258
+{txt}{space 18}SES {c |}{col 23}{res}{space 2}  .780483{col 35}{space 2} .1292507{col 46}{space 1}   -1.50{col 55}{space 3}0.134{col 63}{space 4} .5641589{col 76}{space 3} 1.079755
+{txt}{space 7}LE8_TOTALSCORE {c |}{col 23}{res}{space 2} .9988234{col 35}{space 2} .0011076{col 46}{space 1}   -1.06{col 55}{space 3}0.288{col 63}{space 4}  .996655{col 76}{space 3} 1.000997
+{txt}{hline 22}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. 
+. **HIGHEST TERTILE**
+.  stcox infectionburdenhospbr AGE SEX NonWhite householdsize SES LE8_TOTALSCORE  if SEX==2 & sample_final==1 & AD_PGStert==3
+
+{col 10}{txt}Failure {bf:_d}: {res}dem_diag==1
+{col 4}{txt}Analysis time {bf:_t}: {res}Age_dementia
+{col 3}{txt}Enter on or after: {res}time baselineage
+{col 9}{txt}ID variable: {res}n_eid
+
+{txt}note: {bf:SEX} omitted because of collinearity.
+Iteration 0:  Log likelihood = {res}-2282.3851
+{txt}Iteration 1:  Log likelihood = {res}-2261.2678
+{txt}Iteration 2:  Log likelihood = {res}-2259.5699
+{txt}Iteration 3:  Log likelihood = {res}-2259.5666
+{txt}Iteration 4:  Log likelihood = {res}-2259.5666
+{txt}Refining estimates:
+Iteration 0:  Log likelihood = {res}-2259.5666
+
+{txt}Cox regression with Breslow method for ties
+
+No. of subjects = {res}{ralign 11:6,585}{col 57}{txt}{lalign 13:Number of obs} = {res}{ralign 6:6,585}
+{txt}No. of failures = {res}{ralign 11:301}
+{txt}Time at risk    = {res}{ralign 11:80,437.2815}
+{col 57}{txt}{lalign 13:LR chi2({res:6})} = {res}{ralign 6:45.64}
+{txt}Log likelihood = {res}-2259.5666{col 57}{txt}{lalign 13:Prob > chi2} = {res}{ralign 6:0.0000}
+
+{txt}{hline 22}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                   _t{col 23}{c |} Haz. ratio{col 35}   Std. err.{col 47}      z{col 55}   P>|z|{col 63}     [95% con{col 76}f. interval]
+{hline 22}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+infectionburdenhospbr {c |}{col 23}{res}{space 2} 2.105572{col 35}{space 2} .2752559{col 46}{space 1}    5.70{col 55}{space 3}0.000{col 63}{space 4} 1.629651{col 76}{space 3} 2.720479
+{txt}{space 18}AGE {c |}{col 23}{res}{space 2} 1.046953{col 35}{space 2} .0236267{col 46}{space 1}    2.03{col 55}{space 3}0.042{col 63}{space 4} 1.001655{col 76}{space 3}   1.0943
+{txt}{space 18}SEX {c |}{col 23}{res}{space 2}        1{col 35}{txt}  (omitted)
+{space 13}NonWhite {c |}{col 23}{res}{space 2}  1.05054{col 35}{space 2} .3407258{col 46}{space 1}    0.15{col 55}{space 3}0.879{col 63}{space 4} .5563385{col 76}{space 3} 1.983746
+{txt}{space 8}householdsize {c |}{col 23}{res}{space 2} .9579938{col 35}{space 2}  .059395{col 46}{space 1}   -0.69{col 55}{space 3}0.489{col 63}{space 4} .8483767{col 76}{space 3} 1.081774
+{txt}{space 18}SES {c |}{col 23}{res}{space 2} .8399103{col 35}{space 2} .0766001{col 46}{space 1}   -1.91{col 55}{space 3}0.056{col 63}{space 4}   .70243{col 76}{space 3} 1.004299
+{txt}{space 7}LE8_TOTALSCORE {c |}{col 23}{res}{space 2} .9991767{col 35}{space 2}   .00064{col 46}{space 1}   -1.29{col 55}{space 3}0.199{col 63}{space 4} .9979231{col 76}{space 3} 1.000432
+{txt}{hline 22}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. 
+. capture log close
+{smcl}
+{com}{sf}{ul off}

@@ -1,0 +1,75 @@
+{smcl}
+{com}{sf}{ul off}{txt}
+{com}. 
+. use "D:\16GBBACKUPUSB\BACKUP_USB_SEPTEMBER2014\May Baydoun_folder\UK_BIOBANK_PROJECT\UKB_PAPER8A_INFECTIONBURDEN_OLINK_DEM\DATA\finaldata_unimputedFINAL_SENS",clear
+{txt}
+{com}. 
+. 
+. **HOSPITAL TREATED INFECTION**
+. capture drop time_baseline
+{txt}
+{com}. egen time_baseline=rmean(ts_13*time)
+{txt}(23,332 missing values generated)
+
+{com}. 
+. su time_baseline if time_baseline>-25550 & infectionburdenhosp~=0 & sample_final2==1
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+time_basel~e {c |}{res}      5,042   -4006.689    4817.046     -25379         -1
+{txt}
+{com}. 
+. histogram time_baseline if time_baseline>-25550 & infectionburdenhosp~=0 & sample_final2==1
+{txt}(bin={res}37{txt}, start={res}-25379{txt}, width={res}685.89189{txt})
+{res}{txt}
+{com}. 
+. graph save "FIGURES4AfinSENS.gph", replace
+{res}{txt}file {bf:FIGURES4AfinSENS.gph} saved
+
+{com}. 
+. 
+. **NON-HOSPITAL TREATED INFECTION**
+. 
+. su time_baseline if time_baseline>-25550 & infectionburdennonhosp~=0 & sample_final2==1
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+time_basel~e {c |}{res}      8,686   -6381.016    6431.125     -24975         -1
+{txt}
+{com}. 
+. histogram time_baseline if time_baseline>-25550 & infectionburdennonhosp~=0 & sample_final2==1
+{txt}(bin={res}39{txt}, start={res}-24975{txt}, width={res}640.35897{txt})
+{res}{txt}
+{com}. 
+. graph save "FIGURES4BfinSENS.gph", replace
+{res}{txt}file {bf:FIGURES4BfinSENS.gph} saved
+
+{com}. 
+. 
+. **TOTAL INFECTION BURDEN**
+. 
+. su time_baseline if time_baseline>-25550 & infectionburden~=0 & sample_final2==1
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+time_basel~e {c |}{res}     13,728   -5508.977    5999.937     -25379         -1
+{txt}
+{com}. 
+. histogram time_baseline if time_baseline>-25550 & infectionburden~=0 & sample_final2==1
+{txt}(bin={res}41{txt}, start={res}-25379{txt}, width={res}618.97561{txt})
+{res}{txt}
+{com}. 
+. graph save "FIGURES4CfinSENS.gph", replace
+{res}{txt}file {bf:FIGURES4CfinSENS.gph} saved
+
+{com}. 
+. 
+. graph combine "FIGURES4AfinSENS.gph" "FIGURES4BfinSENS.gph" "FIGURES4CfinSENS.gph"
+{res}{txt}
+{com}. graph save "FIGURES4finSENS.gph", replace
+{res}{txt}file {bf:FIGURES4finSENS.gph} saved
+
+{com}. 
+. capture log close
+{smcl}
+{com}{sf}{ul off}

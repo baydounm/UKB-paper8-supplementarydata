@@ -1,0 +1,73 @@
+{smcl}
+{com}{sf}{ul off}{txt}
+{com}. 
+. 
+. use "D:\16GBBACKUPUSB\BACKUP_USB_SEPTEMBER2014\May Baydoun_folder\UK_BIOBANK_PROJECT\UKB_PAPER8A_INFECTIONBURDEN_OLINK_DEM\DATA\finaldata_unimputedFINAL_SENS",clear
+{txt}
+{com}. 
+. 
+. 
+. 
+. *************************************************STSET FOR DEMENTIA**********************************
+. stset Age_dementia, failure(dem_diag==1) enter(baselineage) id(n_eid) scale(1)
+
+{txt}Survival-time data settings
+
+{col 12}ID variable: {res}n_eid
+{col 10}{txt}Failure event: {res}dem_diag==1
+{col 1}{txt}Observed time interval: {res}(Age_dementia[_n-1], Age_dementia]
+{col 6}{txt}Enter on or after: {res}time baselineage
+{col 6}{txt}Exit on or before: {res}failure
+
+{txt}{hline 74}
+{res}     37,269{txt}  total observations
+{res}          0{txt}  exclusions
+{hline 74}
+{res}     37,269{txt}  observations remaining, representing
+{res}     37,269{txt}  subjects
+{res}        988{txt}  failures in single-failure-per-subject data
+{res} 452,684.95{txt}  total analysis time at risk and under observation
+                                                At risk from t = {res}        0
+                                     {txt}Earliest observed entry t = {res} 50.00137
+                                          {txt}Last observed exit t = {res} 84.54757
+{txt}
+{com}. 
+. 
+. stcox infectionburdenhospbr AGE SEX NonWhite householdsize SES LE8_TOTALSCORE if sample_final2==1
+
+{col 10}{txt}Failure {bf:_d}: {res}dem_diag==1
+{col 4}{txt}Analysis time {bf:_t}: {res}Age_dementia
+{col 3}{txt}Enter on or after: {res}time baselineage
+{col 9}{txt}ID variable: {res}n_eid
+
+{txt}Iteration 0:  Log likelihood = {res}-8767.2464
+{txt}Iteration 1:  Log likelihood = {res}-8693.6227
+{txt}Iteration 2:  Log likelihood = {res}-8686.8115
+{txt}Iteration 3:  Log likelihood = {res} -8686.798
+{txt}Refining estimates:
+Iteration 0:  Log likelihood = {res} -8686.798
+
+{txt}Cox regression with Breslow method for ties
+
+No. of subjects = {res}{ralign 11:36,745}{col 57}{txt}{lalign 13:Number of obs} = {res}{ralign 6:36,745}
+{txt}No. of failures = {res}{ralign 11:937}
+{txt}Time at risk    = {res}{ralign 11:451,756.098}
+{col 57}{txt}{lalign 13:LR chi2({res:7})} = {res}{ralign 6:160.90}
+{txt}Log likelihood = {res}-8686.798{col 57}{txt}{lalign 13:Prob > chi2} = {res}{ralign 6:0.0000}
+
+{txt}{hline 22}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}                   _t{col 23}{c |} Haz. ratio{col 35}   Std. err.{col 47}      z{col 55}   P>|z|{col 63}     [95% con{col 76}f. interval]
+{hline 22}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+infectionburdenhospbr {c |}{col 23}{res}{space 2} 2.206639{col 35}{space 2} .1613582{col 46}{space 1}   10.82{col 55}{space 3}0.000{col 63}{space 4}    1.912{col 76}{space 3} 2.546681
+{txt}{space 18}AGE {c |}{col 23}{res}{space 2} 1.005533{col 35}{space 2}  .013031{col 46}{space 1}    0.43{col 55}{space 3}0.670{col 63}{space 4} .9803141{col 76}{space 3}   1.0314
+{txt}{space 18}SEX {c |}{col 23}{res}{space 2} .7635076{col 35}{space 2} .0505313{col 46}{space 1}   -4.08{col 55}{space 3}0.000{col 63}{space 4} .6706227{col 76}{space 3} .8692576
+{txt}{space 13}NonWhite {c |}{col 23}{res}{space 2} 1.081777{col 35}{space 2} .1890147{col 46}{space 1}    0.45{col 55}{space 3}0.653{col 63}{space 4} .7680876{col 76}{space 3} 1.523579
+{txt}{space 8}householdsize {c |}{col 23}{res}{space 2} .9331149{col 35}{space 2}  .040382{col 46}{space 1}   -1.60{col 55}{space 3}0.110{col 63}{space 4} .8572314{col 76}{space 3} 1.015716
+{txt}{space 18}SES {c |}{col 23}{res}{space 2} .8356206{col 35}{space 2} .0420398{col 46}{space 1}   -3.57{col 55}{space 3}0.000{col 63}{space 4} .7571563{col 76}{space 3} .9222163
+{txt}{space 7}LE8_TOTALSCORE {c |}{col 23}{res}{space 2} .9990872{col 35}{space 2} .0003614{col 46}{space 1}   -2.52{col 55}{space 3}0.012{col 63}{space 4} .9983791{col 76}{space 3} .9997959
+{txt}{hline 22}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. 
+. capture log close
+{smcl}
+{com}{sf}{ul off}

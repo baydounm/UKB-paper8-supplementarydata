@@ -1,0 +1,119 @@
+{smcl}
+{com}{sf}{ul off}{txt}
+{com}. 
+. **************************ANALYSIS EXCLUDING PREVALENT CASES UP TO 3 YEARS OF FOLLOW-UP***********************************************
+. 
+. 
+. **************************************************************STEP 20: MAIN PART OF THE ANALYSIS: *************************
+. 
+. 
+. use "D:\16GBBACKUPUSB\BACKUP_USB_SEPTEMBER2014\May Baydoun_folder\UK_BIOBANK_PROJECT\UKB_PAPER8A_INFECTIONBURDEN_OLINK_DEM\DATA\finaldata_unimputedFINAL",clear
+{txt}
+{com}. 
+. save "D:\16GBBACKUPUSB\BACKUP_USB_SEPTEMBER2014\May Baydoun_folder\UK_BIOBANK_PROJECT\UKB_PAPER8A_INFECTIONBURDEN_OLINK_DEM\DATA\finaldata_unimputedFINAL_SENS",replace
+{txt}{p 0 4 2}
+(file {bf}
+D:\16GBBACKUPUSB\BACKUP_USB_SEPTEMBER2014\May Baydoun_folder\UK_BIOBANK_PROJECT\UKB_PAPER8A_INFECTIONBURDEN_OLINK_DEM\DATA\finaldata_unimputedFINAL_SENS.dta{rm}
+not found)
+{p_end}
+{p 0 4 2}
+file {bf}
+D:\16GBBACKUPUSB\BACKUP_USB_SEPTEMBER2014\May Baydoun_folder\UK_BIOBANK_PROJECT\UKB_PAPER8A_INFECTIONBURDEN_OLINK_DEM\DATA\finaldata_unimputedFINAL_SENS.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. 
+. stset Age_dementia, failure(dem_diag==1) enter(baselineage) id(n_eid) scale(1)
+
+{txt}Survival-time data settings
+
+{col 12}ID variable: {res}n_eid
+{col 10}{txt}Failure event: {res}dem_diag==1
+{col 1}{txt}Observed time interval: {res}(Age_dementia[_n-1], Age_dementia]
+{col 6}{txt}Enter on or after: {res}time baselineage
+{col 6}{txt}Exit on or before: {res}failure
+
+{txt}{hline 74}
+{res}     37,269{txt}  total observations
+{res}          0{txt}  exclusions
+{hline 74}
+{res}     37,269{txt}  observations remaining, representing
+{res}     37,269{txt}  subjects
+{res}        988{txt}  failures in single-failure-per-subject data
+{res} 452,684.95{txt}  total analysis time at risk and under observation
+                                                At risk from t = {res}        0
+                                     {txt}Earliest observed entry t = {res} 50.00137
+                                          {txt}Last observed exit t = {res} 84.54757
+{txt}
+{com}. 
+. capture drop sample5
+{txt}
+{com}. gen sample5=.
+{txt}(37,269 missing values generated)
+
+{com}. replace sample5=1 if ((sample3==1 & priordem==0 & _t~=.) | (sample3==1 & time01_1Ayears>3 & time01_1Ayears~=. & dem_diag==1 & _t~=.)) & Age_dementia>(baselineage+3)
+{txt}(36,745 real changes made)
+
+{com}. replace sample5=0 if sample5~=1
+{txt}(524 real changes made)
+
+{com}. 
+. 
+. capture drop sample_final2
+{txt}
+{com}. gen sample_final2=sample5
+{txt}
+{com}. 
+. tab sample_final2
+
+{txt}sample_fina {c |}
+         l2 {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          0 {c |}{res}        524        1.41        1.41
+{txt}          1 {c |}{res}     36,745       98.59      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}     37,269      100.00
+{txt}
+{com}. 
+. stset Age_dementia if sample_final2==1, failure(dem_diag==1) enter(baselineage) id(n_eid) scale(1)
+
+{txt}Survival-time data settings
+
+{col 12}ID variable: {res}n_eid
+{col 10}{txt}Failure event: {res}dem_diag==1
+{col 1}{txt}Observed time interval: {res}(Age_dementia[_n-1], Age_dementia]
+{col 6}{txt}Enter on or after: {res}time baselineage
+{col 6}{txt}Exit on or before: {res}failure
+{col 7}{txt}Keep observations 
+{col 17}{help j_st_ifvsoptif:{bf:if} {it:exp}}: {res}sample_final2==1
+
+{txt}{hline 74}
+{res}     37,269{txt}  total observations
+{res}        524{txt}  ignored at outset because of {bf:if} {it:exp}
+{hline 74}
+{res}     36,745{txt}  observations remaining, representing
+{res}     36,745{txt}  subjects
+{res}        937{txt}  failures in single-failure-per-subject data
+{res}  451,756.1{txt}  total analysis time at risk and under observation
+                                                At risk from t = {res}        0
+                                     {txt}Earliest observed entry t = {res} 50.00137
+                                          {txt}Last observed exit t = {res} 84.54757
+{txt}
+{com}. 
+. **Main exposures of interest: LE8* infectionburden viralinfectionburden bacterialinfectionburden
+. **Main outcomes of interest: Dementia and AD
+. **Main covariates: AGE SEX RACE_ETHN (or Non_White) educationbr townsend householdincome householdsize
+. **Main effect modifiers: sex and race
+. 
+. save, replace
+{txt}{p 0 4 2}
+file {bf}
+D:\16GBBACKUPUSB\BACKUP_USB_SEPTEMBER2014\May Baydoun_folder\UK_BIOBANK_PROJECT\UKB_PAPER8A_INFECTIONBURDEN_OLINK_DEM\DATA\finaldata_unimputedFINAL_SENS.dta{rm}
+saved
+{p_end}
+
+{com}. 
+. capture log close
+{smcl}
+{com}{sf}{ul off}
