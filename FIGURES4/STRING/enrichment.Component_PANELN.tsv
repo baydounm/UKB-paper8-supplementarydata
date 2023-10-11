@@ -1,0 +1,2 @@
+#term ID	term description	observed gene count	background gene count	strength	false discovery rate	matching proteins in your network (IDs)	matching proteins in your network (labels)
+GO:0030141	Secretory granule	6	873	1.09	0.0060	9606.ENSP00000216124,9606.ENSP00000333664,9606.ENSP00000371018,9606.ENSP00000374069,9606.ENSP00000415769,9606.ENSP00000449999	ARSA,ACAA1,SIRPB1,PTPRN2,ITIH3,CLEC5A
