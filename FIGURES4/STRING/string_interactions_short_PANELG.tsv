@@ -1,2 +1,0 @@
-#term ID	term description	observed gene count	background gene count	strength	false discovery rate	matching proteins in your network (IDs)	matching proteins in your network (labels)
-GO:0030277	Maintenance of gastrointestinal epithelium	3	20	2.15	0.0285	9606.ENSP00000291526,9606.ENSP00000291527,9606.ENSP00000430690	TFF2,TFF1,TFF3

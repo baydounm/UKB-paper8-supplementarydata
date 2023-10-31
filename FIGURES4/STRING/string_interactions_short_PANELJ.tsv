@@ -1,8 +1,0 @@
-#term ID	term description	observed gene count	background gene count	strength	false discovery rate	matching proteins in your network (IDs)	matching proteins in your network (labels)
-GO:0001914	Regulation of T cell mediated cytotoxicity	3	39	1.93	0.0430	9606.ENSP00000252483,9606.ENSP00000315997,9606.ENSP00000402060	NECTIN2,LILRB1,PVR
-GO:0002860	Positive regulation of natural killer cell mediated cytotoxicity directed against tumor cell target	2	6	2.56	0.0430	9606.ENSP00000252483,9606.ENSP00000402060	NECTIN2,PVR
-GO:0042269	Regulation of natural killer cell mediated cytotoxicity	3	47	1.84	0.0430	9606.ENSP00000252483,9606.ENSP00000315997,9606.ENSP00000402060	NECTIN2,LILRB1,PVR
-GO:0042271	Susceptibility to natural killer cell mediated cytotoxicity	2	3	2.86	0.0430	9606.ENSP00000252483,9606.ENSP00000402060	NECTIN2,PVR
-GO:0060370	Susceptibility to T cell mediated cytotoxicity	2	2	3.04	0.0430	9606.ENSP00000252483,9606.ENSP00000402060	NECTIN2,PVR
-GO:2001260	Regulation of semaphorin-plexin signaling pathway	2	3	2.86	0.0430	9606.ENSP00000409007,9606.ENSP00000480132	GDNF,NCAM1
-GO:0071679	Commissural neuron axon guidance	2	10	2.34	0.0477	9606.ENSP00000409007,9606.ENSP00000480132	GDNF,NCAM1
