@@ -18,10 +18,10 @@ This repository contains the following folders:
 --FIGURES2
 --FIGURES3
 --FIGURES4_S16
---SYNTAX
+--FOURWAY_DECOMP
 --OUTPUT
 --OUTPUT2
-
+--SYNTAX
 
 
 
